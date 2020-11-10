@@ -1,0 +1,4 @@
+# default config
+
+app_name: arithmetic_progression
+max_workers: 3
