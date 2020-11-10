@@ -17,10 +17,14 @@ parser.add_argument('--host', help='Host to listen', default='0.0.0.0')
 parser.add_argument('--port', help='Port to accept connections', default='5000')
 parser.add_argument('--reload', action='store_true', help='Auto reload code on change')
 parser.add_argument('-c', '--config', type=argparse.FileType('r'), 	help='Path to configuration file')
+parser.add_argument('-w', '--workers', help='max limit workers')
 
 args = parser.parse_args()
 config = load_config(args.config)
 app = create_app(config=config)
+
+if args.workers:
+    config['max_workers'] = int(args.workers)
 
 if args.reload:
     print('Start with code reload')

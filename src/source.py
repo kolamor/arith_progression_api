@@ -76,15 +76,17 @@ class ArithmeticProgressionTask:
     number_task: int
 
     def __init__(self, count: int, delta: float, interval: float, start: float, number_task: Optional[int] = None):
-        if interval <= 1:
-            raise ValueError(f"interval {interval} must be > 1")
+        if interval < 0:
+            raise ValueError(f"interval {interval} must be > 0")
+        if count <= 1:
+            raise ValueError(f"interval {count} must be > 1")
         self.count = count
         self.delta = delta
         self.start = start
         self.interval = interval
         self.number_task = number_task
 
-    async def run(self, iter_output: Union[Awaitable, None] = None) -> float:
+    async def run(self, iter_output: Union[Awaitable, None] = None) -> None:
         if not iter_output:
             iter_output = self.iter_output
         self.start_date = datetime.datetime.now()
@@ -94,7 +96,6 @@ class ArithmeticProgressionTask:
             self.result = res
             await iter_output(self.result)
         self._status = 'done'
-        return self.result
 
     async def iter_output(self, value):
         print(f'task {self.number_task} default iter output', value)
@@ -148,23 +149,3 @@ async def worker(task: ArithmeticProgressionTask, semaphore: asyncio.Semaphore):
         logger.error(f"worker {e} :: {e.args}")
     finally:
         semaphore.release()
-
-
-async def main():
-    item = {
-        'count': 20,
-        'delta': 2,
-        'start': 1,
-        'interval': 3
-    }
-    t = ArithmeticProgressionTask(number_task=next_number_task(), **item)
-    res = await t.run()
-    print('vvv', res)
-    print(t.status_fields)
-
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-
-
-

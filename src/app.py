@@ -15,7 +15,6 @@ async def create_app(config: dict) -> aiohttp.web.Application:
     setup_routes(app)
     app.on_startup.append(on_start)
     app.on_cleanup.append(on_shutdown)
-
     return app
 
 
@@ -28,6 +27,7 @@ async def on_start(app):
 
 
 async def on_shutdown(app):
+    # TODO создать мягкую остановку с таймаутом без приема requests
     print('on_shutdown')
     logger.info('on_shutdown')
 
