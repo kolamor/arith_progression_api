@@ -139,6 +139,7 @@ async def workers_creator(app):
         task: ArithmeticProgressionTask = await queue.get()
         asyncio.ensure_future(worker(task=task, semaphore=semaphore))
         await asyncio.sleep(0)
+        del task
 
 
 async def worker(task: ArithmeticProgressionTask, semaphore: asyncio.Semaphore):
